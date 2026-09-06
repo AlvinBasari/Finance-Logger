@@ -115,6 +115,25 @@ File ini akan otomatis menyalakan Backend Laravel di port `8088` dan membuka apl
 
 ---
 
+## 📦 File Installer & Standalone Executable (Windows)
+
+File installer Windows telah berhasil dibuild dan siap didistribusikan pada folder `client/dist-electron/`:
+
+| Nama Berkas | Ukuran | Tipe | Keterangan |
+| :--- | :---: | :--- | :--- |
+| **`Finance Invoice Logger Setup 1.1.0.exe`** | ~178 MB | **NSIS Setup Installer** | Installer standar Windows lengkap dengan wizard instalasi, pilihan direktori, shortcut Desktop & Start Menu, serta fitur Uninstaller. |
+| **`Finance Invoice Logger 1.1.0.exe`** | ~177 MB | **Portable Executable** | Aplikasi standalone portabel (*plug and play*) yang dapat langsung dijalankan tanpa proses instalasi. |
+| **`dist-electron/win-unpacked/`** | - | **Unpacked Directory** | Direktori binary executable langsung (`Finance Invoice Logger.exe`) untuk pengujian tanpa kompresi. |
+
+### Perintah Build Ulang Installer:
+Untuk mengompilasi ulang installer kapan saja:
+```cmd
+cd client
+npm run electron:build
+```
+
+---
+
 ## 📂 Struktur Proyek
 
 ```text

@@ -1,7 +1,9 @@
 {
-  "name": "client",
+  "name": "finance-invoice-logger",
   "private": true,
   "version": "1.1.0",
+  "description": "Finance Invoice Logger & Archiving Desktop Application",
+  "author": "Alvin Basari",
   "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
@@ -69,6 +71,13 @@
         "nsis",
         "portable"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Finance Invoice Logger"
     }
   }
 }
