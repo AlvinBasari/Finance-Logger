@@ -41,13 +41,48 @@ Aplikasi Desktop Finance berbasis **Electron.js + React + Tailwind CSS** yang te
 
 ---
 
+7. **Modul Peminjaman Dokumen Eksternal/Internal (Document Loans)**
+   - Peminjaman dokumen arsip resmi untuk KAP (PwC, EY, Deloitte, dll), KPP Pajak, Vendor, dan Internal Legal.
+   - Dynamic Client-Side PDF Watermarking (`pdf-lib`) anti-bocor dengan nama instansi, peruntukan, tanggal, dan disclaimer.
+   - Pengingat jatuh tempo otomatis via Email (HTML Blade templates).
+   - Barcode Scan check-out dari box dan auto-restoration kembali ke box asal saat pengembalian.
+   - Cetak Berita Acara Serah Terima (BAST) & Tanda Terima Pengembalian.
+
+---
+
+## 📚 Dokumentasi Sistem & Diagram UML (PlantUML)
+
+Dokumentasi arsitektur dan diagram UML sistem yang sangat lengkap tersedia pada:  
+👉 **[docs/SYSTEM_DOCUMENTATION_PLANTUML.md](docs/SYSTEM_DOCUMENTATION_PLANTUML.md)**
+
+### Daftar Diagram yang Tersedia:
+- **Diagram Arsitektur Sistem (System Architecture & C4 Container)**
+- **Diagram Use Case (Use Case Diagram)** - Meliputi seluruh peran (Admin, Logger, Supervisor, Warehouse, Peminjam Eksternal)
+- **Diagram Sequence (Sequence Diagrams)**:
+  - 4.1 Autentikasi (Login & Logout via Sanctum)
+  - 4.2 Tahap 1: Penerimaan & Registrasi Invoice (Receipt & Duplicate Check)
+  - 4.3 Tahap 2: Verifikasi Fisik & 7-Category Star Energy Geothermal Checklist
+  - 4.4 Tahap 3: Entry Data Finansial, PPN, PPh & SAP Matching
+  - 4.5 Tahap 4: Digitalisasi Pemindaian Flatbed Scanner HP DeskJet 2132 & Upload Softfile
+  - 4.6 Tahap 5: Rekonsiliasi & Finalisasi Supervisor Keuangan
+  - 4.7 Tahap 6: Pengemasan Box & Pengarsipan Gudang
+  - 4.8 Peminjaman Dokumen, Watermarking PDF Dinamis & Pengembalian Arsip
+  - 4.9 Otomasi Notifikasi Email & Pengingat Jatuh Tempo
+- **Diagram Kelas Backend (Class Diagram)** - Controller, Model, Mailable, Relasi Eloquent
+- **Diagram Relasi Database (ERD / Database Diagram)** - Seluruh 7 entitas tabel, tipe data, foreign key, index
+- **Diagram State Machine (State Machine Diagrams)** - Invoice Lifecycle, Document Loan Lifecycle, Warehouse Box Lifecycle
+- **Diagram Aktivitas (Activity Diagrams)** - End-to-End Invoice Flow & Document Loan Flow
+- **Diagram Deployment & Infrastruktur (Deployment Diagram)** - Hardware scanner, Desktop client, Cloud API, Database, Mail server
+
+---
+
 ## 🔑 Akun Bawaan (Default Login Credentials)
 
 | Role | Email | Password | Hak Akses Utama |
 | :--- | :--- | :--- | :--- |
 | **Finance Logger** | `logger@finance.local` | `password123` | Penerimaan, Verifikasi, Input Nilai, Scan Flatbed, Packing Boks |
-| **Finance Supervisor** | `supervisor@finance.local` | `password123` | Verifikasi, Approval Rekonsiliasi, Monitoring |
-| **Warehouse Custodian** | `warehouse@finance.local` | `password123` | Konfirmasi Inbound Boks, Update Nomor Rak Gudang |
+| **Finance Supervisor** | `supervisor@finance.local` | `password123` | Verifikasi, Approval Rekonsiliasi, Monitoring, Approval Pinjam |
+| **Warehouse Custodian** | `warehouse@finance.local` | `password123` | Konfirmasi Inbound Boks, Update Rak Gudang, Pengembalian Arsip |
 | **System Administrator** | `admin@finance.local` | `password123` | Akses Penuh Seluruh Modul & Pengaturan |
 
 *(Tersedia tombol **Pilihan Cepat Akun Role** di halaman Login dan Settings untuk memudahkan pengujian)*
@@ -84,20 +119,26 @@ File ini akan otomatis menyalakan Backend Laravel di port `8088` dan membuka apl
 
 ```text
 projek waril/
-├── backend/                  # Laravel 11/12 RESTful API & MySQL
-│   ├── app/Http/Controllers/Api/  # AuthController, InvoiceController, WarehouseBoxController
-│   ├── app/Models/           # User, Invoice, WarehouseBox, InvoiceAttachment, InvoiceActivityLog
-│   ├── database/migrations/  # Skema MySQL lengkap 6 tahap
+├── docs/                     # Dokumentasi Teknis & Diagram UML Lengkap
+│   └── SYSTEM_DOCUMENTATION_PLANTUML.md
+├── backend/                  # Laravel 11 RESTful API, Sanctum & MySQL
+│   ├── app/Http/Controllers/Api/  # AuthController, InvoiceController, WarehouseBoxController, DocumentLoanController
+│   ├── app/Mail/             # LoanConfirmationMail, LoanReminderMail, LoanOverdueMail, LoanReturnReceiptMail
+│   ├── app/Models/           # User, Invoice, WarehouseBox, InvoiceAttachment, InvoiceActivityLog, DocumentLoan, DocumentLoanItem
+│   ├── database/migrations/  # Skema MySQL lengkap 6 tahap + Peminjaman
 │   ├── database/seeders/     # User 4 roles & sample data
+│   ├── resources/views/emails/ # Responsive HTML Email Templates
 │   └── routes/api.php        # Endpoint API Sanctum
 │
 ├── client/                   # Electron + Vite + React 18 Desktop App
 │   ├── electron/             # main.cjs (Window & Scanner Bridge) & preload.cjs
 │   └── src/
-│       ├── components/       # AppShell, Button, Input, Card, Modal, PdfViewer, PrintModal, Toast
-│       ├── pages/            # Login, Dashboard, Stage 1 s.d. 6, InvoiceList, Settings
+│       ├── components/       # AppShell, Button, Input, Card, Modal, PdfViewer, PrintModal, Toast, Loan Modals
+│       ├── constants/        # invoiceChecklist.js (Star Energy Standard)
+│       ├── pages/            # Login, Dashboard, Stage 1 s.d. 6, DocumentLoans, InvoiceList, Settings
 │       ├── services/         # Axios API client
-│       └── store/            # Zustand AuthStore & AppStore
+│       ├── store/            # Zustand AuthStore & AppStore
+│       └── utils/            # pdfWatermarkService.js (pdf-lib engine)
 │
 ├── start_backend.bat         # Runner cepat Backend API
 ├── start_desktop.bat         # Runner cepat Desktop Electron
@@ -105,3 +146,4 @@ projek waril/
 ├── arsitektur.md             # Arsitektur & Spesifikasi Hardware
 └── design.md                 # Design System & UI/UX Guidelines
 ```
+
